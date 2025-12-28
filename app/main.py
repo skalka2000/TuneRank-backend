@@ -1,9 +1,9 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app import models, schemas, crud
 from app.database import SessionLocal, engine
-from typing import List
+from typing import List, Optional
 
 
 models.Base.metadata.create_all(bind=engine)
@@ -23,14 +23,6 @@ def get_db():
 def read_root():
     return {"message": "Hello, world"}
 
-@app.get("/albums/by-artist", response_model=List[schemas.Album])
-def get_albums_by_artist(name: str, db: Session = Depends(get_db)):
-    return crud.get_albums_by_artist(db, name)
-
-@app.get("/songs/by-artist", response_model=List[schemas.Song])
-def get_songs_by_artist(name: str, db: Session = Depends(get_db)):
-    return crud.get_songs_by_artist(db, name)
-
 @app.post("/albums", response_model=schemas.Album)
 def create_album(album: schemas.AlbumCreate, db: Session = Depends(get_db)):
     try:
@@ -39,8 +31,25 @@ def create_album(album: schemas.AlbumCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/albums", response_model=List[schemas.Album])
-def read_albums(db: Session = Depends(get_db)):
-    return crud.get_albums(db)
+def get_albums_filtered(
+    artist_names: Optional[List[str]] = Query(default=None),
+    min_rating: Optional[float] = None,
+    max_rating: Optional[float] = None,
+    title_contains: Optional[str] = None,
+    sort_by: Optional[str] = Query(default=None),
+    order: str = Query(default="asc"),
+    db: Session = Depends(get_db)
+):
+    return crud.get_filtered_albums(
+        db,
+        artist_names=artist_names,
+        min_rating=min_rating,
+        max_rating=max_rating,
+        title_contains=title_contains,
+        sort_by=sort_by,
+        order=order
+    )
+
 
 @app.get("/albums/{album_id}", response_model=schemas.Album)
 def read_album(album_id: int, db: Session = Depends(get_db)):
@@ -83,3 +92,25 @@ def delete_song(song_id: int, db: Session = Depends(get_db)):
         crud.delete_song(db, song_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+
+@app.get("/songs", response_model=List[schemas.Song])
+def get_songs_filtered(
+    artist_names: Optional[List[str]] = Query(default=None),
+    album_ids: Optional[List[int]] = Query(default=None),
+    min_rating: Optional[float] = None,
+    max_rating: Optional[float] = None,
+    title_contains: Optional[str] = None,
+    sort_by: Optional[str] = Query(default=None),
+    order: str = Query(default="asc"),
+    db: Session = Depends(get_db)
+):
+    return crud.get_filtered_songs(
+        db,
+        artist_names=artist_names,
+        album_ids=album_ids,
+        min_rating=min_rating,
+        max_rating=max_rating,
+        title_contains=title_contains,
+        sort_by=sort_by,
+        order = order
+    )
