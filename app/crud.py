@@ -27,3 +27,22 @@ def get_albums(db: Session):
 def get_album_by_id(db: Session, album_id: int):
     return db.query(app.models.Album).filter(app.models.Album.id == album_id).first()
 
+def get_song_by_title_and_album(db: Session, album_id: int, title: str):
+    return db.query(app.models.Song).filter(
+        app.models.Song.album_id == album_id,
+        app.models.Song.title == title
+    ).first()
+
+
+def create_song(db: Session, album_id: int, song: app.schemas.SongCreate):
+    album = db.query(app.models.Album).filter(app.models.Album.id == album_id).first()
+    if not album:
+        raise ValueError("Album does not exist")
+    existing_song = get_song_by_title_and_album(db, album_id, song.title)
+    if existing_song:
+        raise ValueError("Song already exists on this album")
+    db_song = app.models.Song(**song.dict(), album_id=album_id)
+    db.add(db_song)
+    db.commit()
+    db.refresh(db_song)
+    return db_song

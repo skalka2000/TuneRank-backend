@@ -40,4 +40,9 @@ def read_album(album_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Album not found")
     return album
 
-
+@app.post("/albums/{album_id}/songs", response_model=schemas.Song)
+def add_song_to_album(album_id: int, song: schemas.SongCreate, db: Session = Depends(get_db)):
+    try:
+        return crud.create_song(db, album_id, song)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))

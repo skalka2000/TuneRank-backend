@@ -10,8 +10,8 @@ class AlbumCreate(BaseModel):
 
 class SongCreate(BaseModel):
     title: str
-    track_number: Optional[int] = None
-    rating: Optional[float] = None
+    track_number: Optional[int] = Field(default=None, ge=1)
+    rating: Optional[float] = Field(default=None, ge=0.0, le=11.0)
 
 class Song(BaseModel):
     id: int
