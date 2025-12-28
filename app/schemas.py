@@ -33,3 +33,16 @@ class Album(BaseModel):
 
     class Config:
         orm_mode = True
+
+from typing import Optional
+
+class AlbumUpdate(BaseModel):
+    title: Optional[str] = None
+    artist: Optional[str] = None
+    year: Optional[int] = None
+    rating: Optional[float] = Field(default=None, ge=0.0, le=10.0)
+
+class SongUpdate(BaseModel):
+    title: Optional[str] = None
+    track_number: Optional[int] = Field(default=None, ge=1)
+    rating: Optional[float] = Field(default=None, ge=0.0, le=11.0)

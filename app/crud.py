@@ -166,3 +166,27 @@ def get_filtered_albums(
             query = query.order_by(order_func(column))
 
     return query.all()
+
+def update_album(db: Session, album_id: int, updates: app.schemas.AlbumUpdate):
+    album = db.query(app.models.Album).filter(app.models.Album.id == album_id).first()
+    if not album:
+        raise ValueError("Album not found")
+
+    for field, value in updates.dict(exclude_unset=True).items():
+        setattr(album, field, value)
+
+    db.commit()
+    db.refresh(album)
+    return album
+
+def update_song(db: Session, song_id: int, updates: app.schemas.SongUpdate):
+    song = db.query(app.models.Song).filter(app.models.Song.id == song_id).first()
+    if not song:
+        raise ValueError("Song not found")
+
+    for field, value in updates.dict(exclude_unset=True).items():
+        setattr(song, field, value)
+
+    db.commit()
+    db.refresh(song)
+    return song

@@ -8,9 +8,7 @@ from typing import List, Optional
 
 models.Base.metadata.create_all(bind=engine)
 
-
 app = FastAPI()
-
 
 def get_db():
     db = SessionLocal()
@@ -49,7 +47,6 @@ def get_albums_filtered(
         sort_by=sort_by,
         order=order
     )
-
 
 @app.get("/albums/{album_id}", response_model=schemas.Album)
 def read_album(album_id: int, db: Session = Depends(get_db)):
@@ -114,3 +111,17 @@ def get_songs_filtered(
         sort_by=sort_by,
         order = order
     )
+
+@app.put("/albums/{album_id}", response_model=schemas.Album)
+def update_album(album_id: int, updates: schemas.AlbumUpdate, db: Session = Depends(get_db)):
+    try:
+        return crud.update_album(db, album_id, updates)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+@app.put("/songs/{song_id}", response_model=schemas.Song)
+def update_song(song_id: int, updates: schemas.SongUpdate, db: Session = Depends(get_db)):
+    try:
+        return crud.update_song(db, song_id, updates)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
