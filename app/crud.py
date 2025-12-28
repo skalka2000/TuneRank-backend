@@ -30,7 +30,7 @@ def get_album_by_id(db: Session, album_id: int):
 def get_song_by_title_and_album(db: Session, album_id: int, title: str):
     return db.query(app.models.Song).filter(
         app.models.Song.album_id == album_id,
-        app.models.Song.title == title
+        func.lower(app.models.Song.title) == title.strip().lower()
     ).first()
 
 
