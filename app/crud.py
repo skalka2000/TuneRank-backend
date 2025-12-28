@@ -1,10 +1,18 @@
 from sqlalchemy.orm import Session
 import app.models, app.schemas
 
+def get_album_by_title_and_artist(db: Session, title: str, artist: str):
+    return db.query(app.models.Album).filter(
+        app.models.Album.title == title,
+        app.models.Album.artist == artist
+    ).first()
+
 def create_album(db: Session, album: app.schemas.AlbumCreate):
-    print("Album: ", album)
-    db_album = app.models.Album(**album.dict())  # Unpack validated schema into ORM
-    print(db_album)
+    existing = get_album_by_title_and_artist(db, album.title, album.artist)
+    if existing:
+        raise ValueError("Album already exists")
+    db_album = app.models.Album(**album.dict())
+    db.add(db_album)
     db.commit()
     db.refresh(db_album)
     return db_album

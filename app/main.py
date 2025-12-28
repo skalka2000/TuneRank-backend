@@ -24,7 +24,10 @@ def read_root():
 
 @app.post("/albums", response_model=schemas.Album)
 def create_album(album: schemas.AlbumCreate, db: Session = Depends(get_db)):
-    return crud.create_album(db=db, album=album)
+    try:
+        return crud.create_album(db=db, album=album)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/albums", response_model=List[schemas.Album])
 def read_albums(db: Session = Depends(get_db)):
