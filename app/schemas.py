@@ -1,11 +1,11 @@
 from pydantic import BaseModel
-from typing import Optional, List
+from typing import Optional, List, Field
 
 class AlbumCreate(BaseModel):
     title: str
     artist: str
     year: Optional[int] = None
-    rating: Optional[int] = None
+    rating: Optional[float] = Field(default=None, ge=0.0, le=10.0)
  
 
 class SongCreate(BaseModel):

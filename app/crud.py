@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 import app.models, app.schemas
 
 def get_album_by_title_and_artist(db: Session, title: str, artist: str):
@@ -8,7 +9,10 @@ def get_album_by_title_and_artist(db: Session, title: str, artist: str):
     ).first()
 
 def create_album(db: Session, album: app.schemas.AlbumCreate):
-    existing = get_album_by_title_and_artist(db, album.title, album.artist)
+    existing = db.query(app.models.Album).filter(
+        func.lower(app.models.Album.title) == album.title.strip().lower(),
+        func.lower(app.models.Album.artist) == album.artist.strip().lower()
+    ).first()
     if existing:
         raise ValueError("Album already exists")
     db_album = app.models.Album(**album.dict())
