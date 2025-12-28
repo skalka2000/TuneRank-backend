@@ -2,12 +2,6 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 import app.models, app.schemas
 
-def get_album_by_title_and_artist(db: Session, title: str, artist: str):
-    return db.query(app.models.Album).filter(
-        app.models.Album.title == title,
-        app.models.Album.artist == artist
-    ).first()
-
 def create_album(db: Session, album: app.schemas.AlbumCreate):
     existing = db.query(app.models.Album).filter(
         func.lower(app.models.Album.title) == album.title.strip().lower(),
@@ -33,12 +27,6 @@ def get_songs_by_album(db: Session, album_id: int):
         raise ValueError("Album does not exist")
 
     return db.query(app.models.Song).filter(app.models.Song.album_id == album_id).all()
-
-def get_song_by_title_and_album(db: Session, album_id: int, title: str):
-    return db.query(app.models.Song).filter(
-        app.models.Song.album_id == album_id,
-        func.lower(app.models.Song.title) == title.strip().lower()
-    ).first()
 
 def get_song_by_id(db: Session, song_id: int):
     return db.query(app.models.Song).filter(app.models.Song.id == song_id).first()
@@ -70,3 +58,14 @@ def delete_song(db: Session, song_id: int):
     db.delete(song)
     db.commit()
 
+def get_album_by_title_and_artist(db: Session, title: str, artist: str):
+    return db.query(app.models.Album).filter(
+        app.models.Album.title == title,
+        app.models.Album.artist == artist
+    ).first()
+
+def get_song_by_title_and_album(db: Session, album_id: int, title: str):
+    return db.query(app.models.Song).filter(
+        app.models.Song.album_id == album_id,
+        func.lower(app.models.Song.title) == title.strip().lower()
+    ).first()
