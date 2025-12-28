@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app import models, schemas, crud
 from app.database import SessionLocal, engine
@@ -51,6 +51,13 @@ def add_song_to_album(album_id: int, song: schemas.SongCreate, db: Session = Dep
 def get_songs(album_id: int, db: Session = Depends(get_db)):
     try:
         return crud.get_songs_by_album(db, album_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+@app.delete("/albums/{album_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_album(album_id: int, db: Session = Depends(get_db)):
+    try:
+        crud.delete_album(db, album_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 

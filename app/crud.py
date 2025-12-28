@@ -34,7 +34,6 @@ def get_songs_by_album(db: Session, album_id: int):
 
     return db.query(app.models.Song).filter(app.models.Song.album_id == album_id).all()
 
-
 def get_song_by_title_and_album(db: Session, album_id: int, title: str):
     return db.query(app.models.Song).filter(
         app.models.Song.album_id == album_id,
@@ -54,3 +53,10 @@ def create_song(db: Session, album_id: int, song: app.schemas.SongCreate):
     db.commit()
     db.refresh(db_song)
     return db_song
+
+def delete_album(db: Session, album_id: int):
+    album = db.query(app.models.Album).filter(app.models.Album.id == album_id).first()
+    if not album:
+        raise ValueError("Album not found")
+    db.delete(album)
+    db.commit()
