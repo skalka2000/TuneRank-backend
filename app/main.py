@@ -46,3 +46,11 @@ def add_song_to_album(album_id: int, song: schemas.SongCreate, db: Session = Dep
         return crud.create_song(db, album_id, song)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    
+@app.get("/albums/{album_id}/songs", response_model=List[schemas.Song])
+def get_songs(album_id: int, db: Session = Depends(get_db)):
+    try:
+        return crud.get_songs_by_album(db, album_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
