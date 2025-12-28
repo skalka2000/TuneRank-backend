@@ -69,3 +69,13 @@ def get_song_by_title_and_album(db: Session, album_id: int, title: str):
         app.models.Song.album_id == album_id,
         func.lower(app.models.Song.title) == title.strip().lower()
     ).first()
+
+def get_albums_by_artist(db: Session, artist_name: str):
+    return db.query(app.models.Album).filter(
+        func.lower(app.models.Album.artist) == artist_name.strip().lower()
+    ).all()
+
+def get_songs_by_artist(db: Session, artist_name: str):
+    return db.query(app.models.Song).join(app.models.Album).filter(
+        func.lower(app.models.Album.artist) == artist_name.strip().lower()
+    ).all()

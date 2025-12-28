@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from app import models, schemas, crud
 from app.database import SessionLocal, engine
 from typing import List
@@ -21,6 +22,14 @@ def get_db():
 @app.get("/")
 def read_root():
     return {"message": "Hello, world"}
+
+@app.get("/albums/by-artist", response_model=List[schemas.Album])
+def get_albums_by_artist(name: str, db: Session = Depends(get_db)):
+    return crud.get_albums_by_artist(db, name)
+
+@app.get("/songs/by-artist", response_model=List[schemas.Song])
+def get_songs_by_artist(name: str, db: Session = Depends(get_db)):
+    return crud.get_songs_by_artist(db, name)
 
 @app.post("/albums", response_model=schemas.Album)
 def create_album(album: schemas.AlbumCreate, db: Session = Depends(get_db)):
