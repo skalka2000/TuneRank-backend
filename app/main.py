@@ -53,6 +53,13 @@ def get_songs(album_id: int, db: Session = Depends(get_db)):
         return crud.get_songs_by_album(db, album_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    
+@app.get("/songs/{song_id}", response_model=schemas.Song)
+def get_song(song_id: int, db: Session = Depends(get_db)):
+    song = crud.get_song_by_id(db, song_id)
+    if not song:
+        raise HTTPException(status_code=404, detail="Song not found")
+    return song
 
 @app.delete("/albums/{album_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_album(album_id: int, db: Session = Depends(get_db)):
@@ -61,3 +68,9 @@ def delete_album(album_id: int, db: Session = Depends(get_db)):
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
+@app.delete("/songs/{song_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_song(song_id: int, db: Session = Depends(get_db)):
+    try:
+        crud.delete_song(db, song_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))

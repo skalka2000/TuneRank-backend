@@ -40,6 +40,8 @@ def get_song_by_title_and_album(db: Session, album_id: int, title: str):
         func.lower(app.models.Song.title) == title.strip().lower()
     ).first()
 
+def get_song_by_id(db: Session, song_id: int):
+    return db.query(app.models.Song).filter(app.models.Song.id == song_id).first()
 
 def create_song(db: Session, album_id: int, song: app.schemas.SongCreate):
     album = db.query(app.models.Album).filter(app.models.Album.id == album_id).first()
@@ -60,3 +62,11 @@ def delete_album(db: Session, album_id: int):
         raise ValueError("Album not found")
     db.delete(album)
     db.commit()
+
+def delete_song(db: Session, song_id: int):
+    song = db.query(app.models.Song).filter(app.models.Song.id == song_id).first()
+    if not song:
+        raise ValueError("Song not found")
+    db.delete(song)
+    db.commit()
+
