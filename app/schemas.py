@@ -13,12 +13,23 @@ class SongCreate(BaseModel):
     track_number: Optional[int] = Field(default=None, ge=1)
     rating: Optional[float] = Field(default=None, ge=0.0, le=11.0)
 
+class AlbumBase(BaseModel):
+    id: int
+    title: str
+    artist: str
+    year: Optional[int]
+    rating: Optional[float]
+
+    class Config:
+        orm_mode = True
+
 class Song(BaseModel):
     id: int
     title: str
     track_number: Optional[int]
     rating: Optional[float]
     album_id: int
+    album: Optional[AlbumBase]
 
     class Config:
         orm_mode = True
@@ -34,8 +45,6 @@ class Album(BaseModel):
     class Config:
         orm_mode = True
 
-from typing import Optional
-
 class AlbumUpdate(BaseModel):
     title: Optional[str] = None
     artist: Optional[str] = None
@@ -46,3 +55,4 @@ class SongUpdate(BaseModel):
     title: Optional[str] = None
     track_number: Optional[int] = Field(default=None, ge=1)
     rating: Optional[float] = Field(default=None, ge=0.0, le=11.0)
+
