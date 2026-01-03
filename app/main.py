@@ -4,11 +4,22 @@ from sqlalchemy import func
 from app import models, schemas, crud
 from app.database import SessionLocal, engine
 from typing import List, Optional
+from fastapi.middleware.cors import CORSMiddleware
+
 
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 def get_db():
     db = SessionLocal()
@@ -112,14 +123,14 @@ def get_songs_filtered(
         order = order
     )
 
-@app.put("/albums/{album_id}", response_model=schemas.Album)
+@app.patch("/albums/{album_id}", response_model=schemas.Album)
 def update_album(album_id: int, updates: schemas.AlbumUpdate, db: Session = Depends(get_db)):
     try:
         return crud.update_album(db, album_id, updates)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
-@app.put("/songs/{song_id}", response_model=schemas.Song)
+@app.patch("/songs/{song_id}", response_model=schemas.Song)
 def update_song(song_id: int, updates: schemas.SongUpdate, db: Session = Depends(get_db)):
     try:
         return crud.update_song(db, song_id, updates)
