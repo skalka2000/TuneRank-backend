@@ -1,17 +1,17 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
 
+class SongCreate(BaseModel):
+    title: str
+    track_number: Optional[int] = Field(default=None, ge=1)
+    rating: Optional[float] = Field(default=None, ge=0.0, le=11.0)
+
 class AlbumCreate(BaseModel):
     title: str
     artist: str
     year: Optional[int] = None
     rating: Optional[float] = Field(default=None, ge=0.0, le=10.0)
- 
-
-class SongCreate(BaseModel):
-    title: str
-    track_number: Optional[int] = Field(default=None, ge=1)
-    rating: Optional[float] = Field(default=None, ge=0.0, le=11.0)
+    songs: Optional[List[SongCreate]] = []
 
 class AlbumBase(BaseModel):
     id: int

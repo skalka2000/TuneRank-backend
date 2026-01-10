@@ -10,7 +10,16 @@ def create_album(db: Session, album: app.schemas.AlbumCreate):
     ).first()
     if existing:
         raise ValueError("Album already exists")
-    db_album = app.models.Album(**album.dict())
+    album_data = album.dict(exclude={"songs"})
+    db_album = app.models.Album(**album_data)
+    if album.songs:
+        for song in album.songs:
+            db_song = app.models.Song(
+                title=song.title,
+                track_number=song.track_number,
+                rating=song.rating,
+            )
+            db_album.songs.append(db_song)    
     db.add(db_album)
     db.commit()
     db.refresh(db_album)
