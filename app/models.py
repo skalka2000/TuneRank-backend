@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from app.database import Base
+from app.utils import calculate_weighted_average
 
 class Album(Base):
     __tablename__ = "albums"  # SQL table name
@@ -15,11 +16,8 @@ class Album(Base):
 
     @property
     def average_rating(self):
-        rated = [s.rating for s in self.songs if s.rating is not None]
-        if rated:
-            return round(sum(rated) / len(rated), 2)  # round to 2 decimal places
-        return None
-
+        power = getattr(self, "_average_power", 1.0)
+        return calculate_weighted_average(self.songs, power)
 
 class Song(Base):
     __tablename__ = "songs"

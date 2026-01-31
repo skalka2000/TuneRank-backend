@@ -117,7 +117,7 @@ def get_filtered_songs(
         query = query.filter(app.models.Song.title.ilike(f"%{title_contains}%"))
 
     if is_interlude is not None:
-        query = query.filter(models.Song.is_interlude == is_interlude)
+        query = query.filter(app.models.Song.is_interlude == is_interlude)
     
 
     # Sorting logic

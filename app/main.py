@@ -47,9 +47,10 @@ def get_albums_filtered(
     title_contains: Optional[str] = None,
     sort_by: Optional[str] = Query(default=None),
     order: str = Query(default="asc"),
+    power: float = Query(default=1.0),
     db: Session = Depends(get_db)
 ):
-    return crud.get_filtered_albums(
+    albums = crud.get_filtered_albums(
         db,
         artist_names=artist_names,
         min_rating=min_rating,
@@ -59,11 +60,17 @@ def get_albums_filtered(
         order=order
     )
 
+    for album in albums:
+        album._average_power = power
+
+    return albums
+
 @app.get("/albums/{album_id}", response_model=schemas.Album)
-def read_album(album_id: int, db: Session = Depends(get_db)):
+def read_album(album_id: int, power: float = Query(1.0), db: Session = Depends(get_db)):
     album = crud.get_album_by_id(db, album_id)
     if not album:
         raise HTTPException(status_code=404, detail="Album not found")
+    album._average_power = power
     return album
 
 @app.post("/albums/{album_id}/songs", response_model=schemas.Song)
