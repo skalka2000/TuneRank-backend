@@ -19,6 +19,13 @@ class Album(Base):
         power = getattr(self, "_average_power", 1.0)
         return calculate_weighted_average(self.songs, power)
 
+    @property
+    def overall_rating(self):
+        if self.rating is not None and self.average_rating is not None:
+            return round((self.rating + self.average_rating) / 2, 2)
+        return None
+
+
 class Song(Base):
     __tablename__ = "songs"
 

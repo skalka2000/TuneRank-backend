@@ -21,6 +21,7 @@ class AlbumBase(BaseModel):
     year: Optional[int]
     rating: Optional[float]
     average_rating: Optional[float] = None
+    overall_rating: Optional[float] = None
 
     class Config:
         orm_mode = True
@@ -45,6 +46,7 @@ class Album(BaseModel):
     rating: Optional[float]
     songs: List[Song] = []
     average_rating: Optional[float] = None
+    overall_rating: Optional[float] = None
 
     class Config:
         orm_mode = True
