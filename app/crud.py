@@ -29,7 +29,13 @@ def get_albums(db: Session):
     return db.query(app.models.Album).all()
 
 def get_album_by_id(db: Session, album_id: int):
-    return db.query(app.models.Album).filter(app.models.Album.id == album_id).first()
+    album = db.query(app.models.Album).filter(app.models.Album.id == album_id).first()
+    if not album:
+        return None
+    rated_songs = [s.rating for s in album.songs if s.rating is not None]
+    album.average_rating = sum(rated_songs) / len(rated_songs) if rated_songs else None
+    return album
+
 
 def get_songs_by_album(db: Session, album_id: int):
     album = db.query(app.models.Album).filter(app.models.Album.id == album_id).first()
