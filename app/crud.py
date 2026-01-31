@@ -18,6 +18,7 @@ def create_album(db: Session, album: app.schemas.AlbumCreate):
                 title=song.title,
                 track_number=song.track_number,
                 rating=song.rating,
+                is_interlude = song.is_interlude
             )
             db_album.songs.append(db_song)    
     db.add(db_album)
@@ -93,6 +94,8 @@ def get_filtered_songs(
     title_contains: Optional[str] = None,
     sort_by = None,
     order = "asc",
+    is_interlude: Optional[bool] = None,
+
 ):
     query = db.query(app.models.Song).join(app.models.Album)
 
@@ -112,6 +115,10 @@ def get_filtered_songs(
 
     if title_contains:
         query = query.filter(app.models.Song.title.ilike(f"%{title_contains}%"))
+
+    if is_interlude is not None:
+        query = query.filter(models.Song.is_interlude == is_interlude)
+    
 
     # Sorting logic
     if sort_by:

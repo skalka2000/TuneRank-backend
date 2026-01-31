@@ -5,6 +5,7 @@ class SongCreate(BaseModel):
     title: str
     track_number: Optional[int] = Field(default=None, ge=1)
     rating: Optional[float] = Field(default=None, ge=0.0, le=11.0)
+    is_interlude: Optional[bool] = False
 
 class AlbumCreate(BaseModel):
     title: str
@@ -31,6 +32,7 @@ class Song(BaseModel):
     rating: Optional[float]
     album_id: int
     album: Optional[AlbumBase]
+    is_interlude: Optional[bool] = False
 
     class Config:
         orm_mode = True
@@ -57,4 +59,5 @@ class SongUpdate(BaseModel):
     title: Optional[str] = None
     track_number: Optional[int] = Field(default=None, ge=1)
     rating: Optional[float] = Field(default=None, ge=0.0, le=11.0)
+    is_interlude: Optional[bool] = False
 

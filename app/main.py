@@ -110,7 +110,9 @@ def get_songs_filtered(
     title_contains: Optional[str] = None,
     sort_by: Optional[str] = Query(default=None),
     order: str = Query(default="asc"),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    is_interlude: Optional[bool] = Query(default=None),
+
 ):
     return crud.get_filtered_songs(
         db,
@@ -120,7 +122,8 @@ def get_songs_filtered(
         max_rating=max_rating,
         title_contains=title_contains,
         sort_by=sort_by,
-        order = order
+        order = order,
+        is_interlude=is_interlude
     )
 
 @app.patch("/albums/{album_id}", response_model=schemas.Album)

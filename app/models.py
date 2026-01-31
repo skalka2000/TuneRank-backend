@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -29,6 +29,7 @@ class Song(Base):
     title = Column(String, nullable=False)
     track_number = Column(Integer)
     rating = Column(Float)
+    is_interlude = Column(Boolean, default=False)
 
     album = relationship("Album", back_populates="songs")
 
