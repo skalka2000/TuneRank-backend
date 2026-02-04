@@ -51,6 +51,7 @@ def get_albums_filtered(
     greatness_threshold: float = Query(default=8.0),
     scaling_factor: float = Query(default=0.3),
     steep_factor: float = Query(default=3),
+    average_rating_weight: float = Query(default=0.5),
     db: Session = Depends(get_db)
 ):
     albums = crud.get_filtered_albums(
@@ -68,14 +69,27 @@ def get_albums_filtered(
         album._greatness_threshold = greatness_threshold
         album._scaling_factor = scaling_factor
         album._steep_factor = steep_factor
+        album._average_rating_weight = average_rating_weight
     return albums
 
 @app.get("/albums/{album_id}", response_model=schemas.Album)
-def read_album(album_id: int, power: float = Query(1.0), db: Session = Depends(get_db)):
+def read_album(
+    album_id: int, 
+    power: float = Query(1.0), 
+    greatness_threshold: float = Query(8.0),
+    scaling_factor: float = Query(default=0.3),
+    steep_factor: float = Query(default=3),
+    average_rating_weight: float = Query(default=0.5),    
+    db: Session = Depends(get_db)
+    ):
     album = crud.get_album_by_id(db, album_id)
     if not album:
         raise HTTPException(status_code=404, detail="Album not found")
     album._average_power = power
+    album._greatness_threshold = greatness_threshold
+    album._scaling_factor = scaling_factor
+    album._steep_factor = steep_factor
+    album._average_rating_weight = average_rating_weight    
     return album
 
 @app.post("/albums/{album_id}/songs", response_model=schemas.Song)

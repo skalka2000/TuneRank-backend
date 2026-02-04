@@ -22,12 +22,13 @@ class Album(Base):
         scaling_factor = getattr(self, "_scaling_factor", 0.3)
         steep_factor = getattr(self, "_steep_factor", 3)
         weighted_average = calculate_weighted_average(self.songs, power)
-        return round(apply_logistic_normalization(weighted_average, greatness_threshold, scaling_factor, steep_factor),2)
+        return round(apply_logistic_normalization(weighted_average, greatness_threshold, scaling_factor, steep_factor),3)
 
     @property
     def overall_rating(self):
+        average_rating_weight = getattr(self, "_average_rating_weight", 0.5)
         if self.rating is not None and self.average_rating is not None:
-            return math.floor((self.rating + self.average_rating) / 2 * 100) / 100
+            return math.floor((self.rating * (1 - average_rating_weight) + self.average_rating * average_rating_weight) * 100) / 100
         return None
 
 
