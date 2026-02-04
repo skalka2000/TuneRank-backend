@@ -48,6 +48,9 @@ def get_albums_filtered(
     sort_by: Optional[str] = Query(default=None),
     order: str = Query(default="asc"),
     power: float = Query(default=1.0),
+    greatness_threshold: float = Query(default=8.0),
+    scaling_factor: float = Query(default=0.3),
+    steep_factor: float = Query(default=3),
     db: Session = Depends(get_db)
 ):
     albums = crud.get_filtered_albums(
@@ -62,7 +65,9 @@ def get_albums_filtered(
 
     for album in albums:
         album._average_power = power
-
+        album._greatness_threshold = greatness_threshold
+        album._scaling_factor = scaling_factor
+        album._steep_factor = steep_factor
     return albums
 
 @app.get("/albums/{album_id}", response_model=schemas.Album)
@@ -119,7 +124,6 @@ def get_songs_filtered(
     order: str = Query(default="asc"),
     db: Session = Depends(get_db),
     is_interlude: Optional[bool] = Query(default=None),
-
 ):
     return crud.get_filtered_songs(
         db,

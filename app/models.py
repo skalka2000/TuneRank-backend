@@ -1,7 +1,8 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from app.database import Base
-from app.utils import calculate_weighted_average
+from app.utils import calculate_weighted_average, apply_logistic_normalization
+import math
 
 class Album(Base):
     __tablename__ = "albums"  # SQL table name
@@ -17,12 +18,16 @@ class Album(Base):
     @property
     def average_rating(self):
         power = getattr(self, "_average_power", 1.0)
-        return calculate_weighted_average(self.songs, power)
+        greatness_threshold = getattr(self, "_greatness_threshold", 8.0)
+        scaling_factor = getattr(self, "_scaling_factor", 0.3)
+        steep_factor = getattr(self, "_steep_factor", 3)
+        weighted_average = calculate_weighted_average(self.songs, power)
+        return round(apply_logistic_normalization(weighted_average, greatness_threshold, scaling_factor, steep_factor),2)
 
     @property
     def overall_rating(self):
         if self.rating is not None and self.average_rating is not None:
-            return round((self.rating + self.average_rating) / 2, 2)
+            return math.floor((self.rating + self.average_rating) / 2 * 100) / 100
         return None
 
 
