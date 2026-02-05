@@ -95,7 +95,6 @@ def get_filtered_songs(
     sort_by = None,
     order = "asc",
     is_interlude: Optional[bool] = None,
-
 ):
     query = db.query(app.models.Song).join(app.models.Album)
 
@@ -118,7 +117,6 @@ def get_filtered_songs(
 
     if is_interlude is not None:
         query = query.filter(app.models.Song.is_interlude == is_interlude)
-    
 
     # Sorting logic
     if sort_by:
