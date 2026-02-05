@@ -17,12 +17,29 @@ class Album(Base):
 
     @property
     def average_rating(self):
+
+        if not self.songs:
+            return None
+
         power = getattr(self, "_average_power", 1.0)
         greatness_threshold = getattr(self, "_greatness_threshold", 8.0)
         scaling_factor = getattr(self, "_scaling_factor", 0.3)
         steep_factor = getattr(self, "_steep_factor", 3)
+
         weighted_average = calculate_weighted_average(self.songs, power)
-        return round(apply_logistic_normalization(weighted_average, greatness_threshold, scaling_factor, steep_factor),3)
+
+        if weighted_average is None:
+            return None
+
+        return round(
+            apply_logistic_normalization(
+                weighted_average,
+                greatness_threshold,
+                scaling_factor,
+                steep_factor
+            ),
+            3
+        )
 
     @property
     def overall_rating(self):
