@@ -23,8 +23,10 @@ class AlbumBase(BaseModel):
     average_rating: Optional[float] = None
     overall_rating: Optional[float] = None
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
+
 
 class Song(BaseModel):
     id: int
@@ -34,9 +36,12 @@ class Song(BaseModel):
     album_id: int
     album: Optional[AlbumBase]
     is_interlude: Optional[bool] = False
+    user_id: int
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
+
 
 class Album(BaseModel):
     id: int
@@ -46,10 +51,13 @@ class Album(BaseModel):
     rating: Optional[float]
     songs: List[Song] = []
     average_rating: Optional[float] = None
-    overall_rating: Optional[float] = None
+    overall_rating: Optional[float] = None    
+    user_id: int
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+}
+
 
 class AlbumUpdate(BaseModel):
     title: Optional[str] = None
@@ -63,3 +71,23 @@ class SongUpdate(BaseModel):
     rating: Optional[float] = Field(default=None, ge=0.0, le=11.0)
     is_interlude: Optional[bool] = False
 
+
+class UserSettingsBase(BaseModel):
+    average_power: float = 1.0
+    greatness_threshold: float = 8.0
+    scaling_factor: float = 0.3
+    steep_factor: float = 3.0
+    average_rating_weight: float = 0.5
+
+
+class UserSettingsCreate(UserSettingsBase):
+    pass
+
+
+class UserSettings(UserSettingsBase):
+    id: int
+    user_id: int
+
+    model_config = {
+        "from_attributes": True
+    }

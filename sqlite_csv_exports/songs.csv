@@ -1,0 +1,259 @@
+id,album_id,title,track_number,rating,is_interlude
+1,1,15 Step,1,7.0,0
+2,1,Bodysnatchers,2,8.5,0
+3,1,Nude,3,8.5,0
+4,1,Weird Fishes,4,11.0,0
+5,1,All I Need,5,9.5,0
+6,1,Faust Arp,6,6.5,1
+7,1,Reckoner,7,10.0,0
+8,1,House of Cards,8,7.0,0
+9,1,Jigsaw Falling Into Place,9,10.0,0
+10,1,Videotape,10,8.5,0
+11,2,Airbag,1,9.5,0
+12,2,Paranoid Android,2,10.0,0
+13,2,Subterranean Homesick Alien,3,7.0,0
+14,2,Exit Music (For A Film),4,10.0,0
+15,2,Let Down,5,11.0,0
+16,2,Karma Police,6,10.0,0
+17,2,Fitter Happier,7,8.0,1
+18,2,Electioneering,8,7.0,0
+19,2,Climbing Up The Walls,9,8.0,0
+20,2,No Surprises,10,10.0,0
+21,2,Lucky,11,8.0,0
+22,2,The Tourist,12,8.0,0
+23,3,Shine On You Crazy Diamond (Parts I - V),1,10.0,0
+24,3,Welcome To The Machine,2,9.0,0
+25,3,Have A Cigar,3,8.5,0
+26,3,Wish You Were Here,4,10.0,0
+27,3,Shine On You Crazy Diamond (Parts VI - IX),5,9.0,0
+28,4,Pings on the Wing 1,1,7.5,1
+29,4,Dogs,2,10.0,0
+30,4,Pigs (Three Different Ones),3,9.0,0
+31,4,Sheep,4,8.0,0
+32,4,Pigs On The Wing 2,5,7.5,1
+33,5,Fight Fire With Fire,1,8.0,0
+34,5,Ride The Lightning,2,8.5,0
+35,5,For Whom The Bell Tolls,3,8.5,0
+36,5,Fade To Black,4,9.5,0
+37,5,Trapped Under Ice,5,7.5,0
+38,5,Escape,6,7.5,0
+39,5,Creeping Death,7,10.0,0
+40,5,The Call Of Ktulu,8,9.5,0
+41,6,Battery,1,8.5,0
+42,6,Master Of Puppets,2,10.0,0
+43,6,The Thing That Should Not Be,3,8.0,0
+44,6,Welcome Home (Sanitarium),4,9.0,0
+45,6,Disposable Heroes,5,9.5,0
+46,6,Leper Messiah,6,9.0,0
+47,6,Orion,7,10.0,0
+48,6,"Damage, Inc.",8,8.0,0
+49,7,Planet Telex,1,7.0,0
+50,7,The Bends,2,7.0,0
+51,7,High And Dry,3,7.0,0
+52,7,Fake Plastic Trees,4,10.0,0
+53,7,Bones,5,6.5,0
+54,7,Nice Dream,6,8.5,0
+55,7,Just,7,8.0,0
+56,7,My Iron Lung,8,6.5,0
+57,7,Bullet Proof (I Wish I Was),9,8.0,0
+58,7,Black Star,10,7.0,0
+59,7,Sulk,11,6.0,0
+60,7,Street Spirit (Fade Out),12,10.0,0
+61,8,Under The Pressure,1,10.0,0
+62,8,Red Eyes,2,9.0,0
+63,8,Suffering,3,7.0,0
+64,8,Ocean In Between The Waves,4,9.0,0
+65,8,Disappearing,5,7.0,0
+66,8,Eyes To The Wind,6,8.0,0
+67,8,The Haunting Idle,7,7.0,1
+68,8,Burning,8,7.5,0
+69,8,Lost In The Dream,9,7.0,0
+70,8,In Reverse,10,8.0,0
+71,9,Everything In Its Right Place,1,8.5,0
+72,9,Kid A,2,6.5,0
+73,9,The National Anthem,3,8.0,0
+74,9,How To Disappear Completely,4,9.5,0
+75,9,Treefingers,5,7.5,1
+76,9,Optimistic,6,8.0,0
+77,9,In Limbo,7,6.0,0
+78,9,Idioteque,8,9.5,0
+79,9,Morning Bell,9,7.0,0
+80,9,Motion Picture Soundtrack,10,8.0,0
+81,10,Burn The Witch,1,8.5,0
+82,10,Daydreaming,2,8.5,0
+83,10,Decks Dark,3,7.5,0
+84,10,Desert Island Disk,4,6.0,0
+85,10,Ful Stop,5,9.5,0
+86,10,Glass Eyes,6,6.0,0
+87,10,Identikit,7,7.5,0
+88,10,The Numbers,8,7.5,0
+89,10,Present Tense,9,8.5,0
+90,10,Tinker Tailor Soldier Sailor,10,6.5,0
+91,10,True Love Waits,11,9.0,0
+92,11,She Looked Like Me!,1,8.5,0
+93,11,Killing Time,2,8.0,0
+94,11,True Blue Interlude,3,8.0,1
+95,11,Image,4,8.0,0
+96,11,Death & Romance,5,8.5,0
+97,11,"Fear, Sex",6,7.5,0
+98,11,Vampire in the Corner,7,8.5,0
+99,11,Watching T.V.,8,8.0,0
+100,11,Tunnel Vision,9,7.5,0
+101,11,Love Is Everywhere,10,7.5,0
+102,11,Feeling DiskInserted?,11,8.0,1
+103,11,That's My Floor,12,7.5,0
+104,11,Cry For Me,13,9.5,0
+105,11,Angel On A Satellite,14,9.5,0
+106,11,The Ballad Of Matt & Mica,15,8.5,0
+107,12,all-american bitch,1,8.0,0
+108,12,bad idea right?,2,8.5,0
+109,12,vampire,3,9.0,0
+110,12,lacy,4,8.0,0
+111,12,ballad of a homeschooled girl,5,7.5,0
+112,12,making the bed,6,9.5,0
+113,12,logical,7,6.0,0
+114,12,get him back!,8,9.0,0
+115,12,love is embarrassing,9,7.5,0
+116,12,the grudge,10,7.0,0
+117,12,pretty isn't pretty,11,7.0,0
+118,12,teenage dream,12,8.0,0
+119,13,brutal,1,7.5,0
+120,13,traitor,2,8.0,0
+121,13,drivers license,3,9.0,0
+122,13,"1 step forward, 3 steps back",4,6.5,0
+123,13,deja vu,5,8.0,0
+124,13,good 4 u,6,8.0,0
+125,13,enough for you,7,5.0,0
+126,13,happier,8,7.5,0
+127,13,"jealousy, jealousy",9,7.0,0
+128,13,favorite crime,10,7.0,0
+129,13,hope ur ok,11,7.5,0
+130,14,21st Century Schizoid Man,1,8.5,0
+131,14,I Talk To The Wind,2,7.0,0
+132,14,Epitath,3,10.0,0
+133,14,Moonchild,4,5.0,0
+134,14,The Court Of The Crimson King,5,9.5,0
+135,15,Give Life Back To Music,1,9.0,0
+136,15,The Game Of Love,2,6.5,0
+137,15,Giorgio By Moroder,3,8.0,0
+138,15,Within,4,8.5,0
+139,15,Instant Crush,5,9.0,0
+140,15,Lose Yourself To Dance,6,6.5,0
+141,15,Touch,7,9.5,0
+142,15,Get Lucky,8,7.5,0
+143,15,Beyond,9,8.5,0
+144,15,Motherboard,10,6.5,0
+145,15,Fragments Of Time,11,7.0,0
+146,15,Doin' It Right ,12,8.0,0
+147,15,Contact,13,9.0,0
+148,16,Bloom,1,6.5,0
+149,16,Morning Mr. Magpie,2,6.0,0
+150,16,Little By Little,3,5.0,0
+151,16,Feral,4,6.0,1
+152,16,Lotus Flower,5,8.0,0
+153,16,Codex,6,8.5,0
+154,16,Give Up The Ghost,7,6.0,0
+155,16,Seperator,8,7.0,0
+156,17,Packt Like Sardines In A Crushd Tin Box,1,6.0,0
+157,17,Pyramid Song,2,8.5,0
+158,17,Pulk/Pull Revolving Doors,3,4.0,0
+159,17,You And Whose Army?,4,7.5,0
+160,17,I Might Be Wrong,5,7.5,0
+161,17,Knives Out,6,8.5,0
+162,17,Morning Bell/Amnesiac,7,5.0,0
+163,17,Dollars And Cents,8,6.5,0
+164,17,Haunting Bears,9,5.0,1
+165,17,Like Spinning Plates,10,5.0,0
+166,17,Life In a Glasshouse,11,5.0,0
+167,18,Breathe In The Air,2,8.5,0
+168,18,On The Run,3,7.5,0
+169,18,Time,4,9.0,0
+170,18,The Great Gig In The Sky,5,8.0,0
+171,18,Money,6,7.5,0
+172,18,Us And Them,7,9.0,0
+173,18,Any Colour You Like,8,6.5,1
+174,18,Brain Damage,9,9.0,0
+175,19,360,1,9.0,0
+176,19,Club classics,2,8.0,0
+177,19,Sympathy is a knife,3,8.5,0
+178,19,I might say something stupid,4,8.0,0
+179,19,Talk talk,5,7.5,0
+180,19,Von dutch,6,8.0,0
+181,19,Everything is romantic,7,8.5,0
+182,19,Rewind,8,7.5,0
+183,19,So I,9,9.0,0
+184,19,"Girl, so confusing",10,9.5,0
+185,19,Apple,11,8.0,0
+186,19,B2b,12,8.0,0
+187,19,Mean girls,13,8.5,0
+188,19,I think about it all the time,14,6.5,0
+189,19,365,15,9.0,0
+190,20,the 1,1,7.5,0
+191,20,cardigan,2,8.0,0
+192,20,the last great american dynasty,3,8.0,0
+193,20,exile,4,8.5,0
+194,20,my tears ricochet,5,9.0,0
+195,20,mirrorball,6,8.0,0
+196,20,seven,7,6.5,0
+197,20,august,8,8.5,0
+198,20,this is me trying,9,7.5,0
+199,20,illicit affairs,10,9.5,0
+200,20,invisible string,11,6.5,0
+201,20,mad woman,12,6.5,0
+202,20,epiphany,13,8.0,0
+203,20,betty,14,7.5,0
+204,20,peace,15,6.0,0
+205,20,hoax,16,7.0,0
+206,21,Alison,1,9.0,0
+207,21,Machine Gun,2,9.5,0
+208,21,40 Days,3,8.0,0
+209,21,Sing,4,8.0,0
+210,21,Here She Comes,5,8.0,0
+211,21,Souvlaki Space Station,6,9.5,0
+212,21,When The Sun Hits,7,9.0,0
+213,21,Altogether,8,6.5,0
+214,21,Melon Yellow,9,7.5,0
+215,21,Dagger,10,7.5,0
+216,22,In The Flesh?,1,9.0,0
+217,22,The Thin Ice,2,7.5,0
+218,22,"Another Brick In The Wall, Pt. 1",3,7.0,1
+219,22,Happiest Days Of Our Lives,4,7.0,1
+220,22,"Another Brick In The Wall, Pt. 2",5,8.5,0
+221,22,Mother,6,8.0,0
+222,22,Goodbye Blue Sky,7,7.5,0
+223,22,Empty Spaces,8,7.5,1
+224,22,Young Lust,9,7.0,0
+225,22,One of My Turns,10,7.5,0
+226,22,Don't Leave Me Now,11,7.0,0
+227,22,"Another Brick In The Wall, Pt. 3",12,7.5,1
+228,22,Goodbye Cruel World,13,7.5,1
+229,22,Hey You,14,9.5,0
+230,22,Is There Anybody Out There?,15,7.0,1
+231,22,Nobody Home,16,8.5,0
+232,22,Vera,17,8.0,0
+233,22,Bring The Boys Back Home,18,8.0,1
+234,22,Comfortably Numb,19,10.0,0
+236,18,Eclipse,10,8.5,1
+237,22,The Show Must Go On,20,8.0,1
+238,22,In The Flesh,21,9.0,0
+239,22,Run Like Hell,22,8.0,0
+240,22,Waiting For The Worms,23,8.5,0
+241,22,Stop,24,5.0,1
+242,22,The Trial,25,7.5,0
+243,22,Outside The Wall,26,7.5,1
+244,23,Come Together,1,8.0,0
+245,23,Something,2,8.5,0
+246,23,Maxwell's Silver Hammer,3,7.5,0
+247,23,Oh Darling!,4,7.5,0
+248,23,Octopus's Garden,5,7.5,0
+249,23,I Want You (She's So Heavy),6,7.5,0
+250,23,Here Comes The Sun,7,9.5,0
+251,23,Because,8,6.5,0
+252,23,You Never Give Me You Money,9,7.0,0
+253,23,Sun King,10,6.5,0
+254,23,Mean Mr. Mustard,11,6.5,1
+255,23,Polythene Pan,12,7.0,1
+256,23,She Came In Through The Bathroom Window,13,6.5,1
+257,23,Golden Slumbers,14,8.0,1
+258,23,Carry That Weight,15,8.5,1
+259,23,The End,16,7.5,1

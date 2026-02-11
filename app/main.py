@@ -5,6 +5,7 @@ from app import models, schemas, crud
 from app.database import SessionLocal, engine
 from typing import List, Optional
 from fastapi.middleware.cors import CORSMiddleware
+from app.utils import get_current_user_id
 
 
 
@@ -33,9 +34,13 @@ def read_root():
     return {"message": "Hello, world"}
 
 @app.post("/albums", response_model=schemas.Album)
-def create_album(album: schemas.AlbumCreate, db: Session = Depends(get_db)):
+def create_album(
+    album: schemas.AlbumCreate, 
+    db: Session = Depends(get_db), 
+    user_id: int = Depends(get_current_user_id)
+):
     try:
-        return crud.create_album(db=db, album=album)
+        return crud.create_album(db=db, album=album, user_id=user_id)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -47,15 +52,21 @@ def get_albums_filtered(
     title_contains: Optional[str] = None,
     sort_by: Optional[str] = Query(default=None),
     order: str = Query(default="asc"),
-    power: float = Query(default=1.0),
-    greatness_threshold: float = Query(default=8.0),
-    scaling_factor: float = Query(default=0.3),
-    steep_factor: float = Query(default=3),
-    average_rating_weight: float = Query(default=0.5),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
 ):
+    settings = crud.get_user_settings(db, user_id)
+
+    if not settings:
+        settings = crud.create_user_settings(
+            db,
+            user_id,
+            schemas.UserSettingsCreate()
+        )
+
     albums = crud.get_filtered_albums(
         db,
+        user_id=user_id,
         artist_names=artist_names,
         min_rating=min_rating,
         max_rating=max_rating,
@@ -65,65 +76,92 @@ def get_albums_filtered(
     )
 
     for album in albums:
-        album._average_power = power
-        album._greatness_threshold = greatness_threshold
-        album._scaling_factor = scaling_factor
-        album._steep_factor = steep_factor
-        album._average_rating_weight = average_rating_weight
+        album._average_power = settings.average_power
+        album._greatness_threshold = settings.greatness_threshold
+        album._scaling_factor = settings.scaling_factor
+        album._steep_factor = settings.steep_factor
+        album._average_rating_weight = settings.average_rating_weight
+
     return albums
 
 @app.get("/albums/{album_id}", response_model=schemas.Album)
 def read_album(
     album_id: int, 
-    power: float = Query(1.0), 
-    greatness_threshold: float = Query(8.0),
-    scaling_factor: float = Query(default=0.3),
-    steep_factor: float = Query(default=3),
-    average_rating_weight: float = Query(default=0.5),    
-    db: Session = Depends(get_db)
-    ):
-    album = crud.get_album_by_id(db, album_id)
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
+):
+    settings = crud.get_user_settings(db, user_id)
+
+    if not settings:
+        settings = crud.create_user_settings(
+            db,
+            user_id,
+            schemas.UserSettingsCreate()
+        )    
+    album = crud.get_album_by_id(db, album_id, user_id=user_id)
     if not album:
         raise HTTPException(status_code=404, detail="Album not found")
-    album._average_power = power
-    album._greatness_threshold = greatness_threshold
-    album._scaling_factor = scaling_factor
-    album._steep_factor = steep_factor
-    album._average_rating_weight = average_rating_weight    
+    
+    album._average_power = settings.average_power
+    album._greatness_threshold = settings.greatness_threshold
+    album._scaling_factor = settings.scaling_factor
+    album._steep_factor = settings.steep_factor
+    album._average_rating_weight = settings.average_rating_weight 
     return album
 
 @app.post("/albums/{album_id}/songs", response_model=schemas.Song)
-def add_song_to_album(album_id: int, song: schemas.SongCreate, db: Session = Depends(get_db)):
+def add_song_to_album(
+    album_id: int,
+    song: schemas.SongCreate, 
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)    
+):
     try:
-        return crud.create_song(db, album_id, song)
+        return crud.create_song(db, album_id, song, user_id=user_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     
 @app.get("/albums/{album_id}/songs", response_model=List[schemas.Song])
-def get_songs(album_id: int, db: Session = Depends(get_db)):
+def get_songs(
+    album_id: int,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
+):
     try:
-        return crud.get_songs_by_album(db, album_id)
+        return crud.get_songs_by_album(db, album_id, user_id=user_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     
 @app.get("/songs/{song_id}", response_model=schemas.Song)
-def get_song(song_id: int, db: Session = Depends(get_db)):
-    song = crud.get_song_by_id(db, song_id)
+def get_song(
+    song_id: int,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
+):
+    song = crud.get_song_by_id(db, song_id, user_id=user_id)
     if not song:
         raise HTTPException(status_code=404, detail="Song not found")
     return song
 
 @app.delete("/albums/{album_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_album(album_id: int, db: Session = Depends(get_db)):
+def delete_album(
+    album_id: int,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
+):
     try:
-        crud.delete_album(db, album_id)
+        crud.delete_album(db, album_id, user_id=user_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
 @app.delete("/songs/{song_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_song(song_id: int, db: Session = Depends(get_db)):
+def delete_song(
+    song_id: int,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
+):
     try:
-        crud.delete_song(db, song_id)
+        crud.delete_song(db, song_id, user_id=user_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
@@ -138,29 +176,68 @@ def get_songs_filtered(
     order: str = Query(default="asc"),
     db: Session = Depends(get_db),
     is_interlude: Optional[bool] = Query(default=None),
+    user_id: int = Depends(get_current_user_id)
 ):
     return crud.get_filtered_songs(
         db,
+        user_id=user_id,
         artist_names=artist_names,
         album_ids=album_ids,
         min_rating=min_rating,
         max_rating=max_rating,
         title_contains=title_contains,
         sort_by=sort_by,
-        order = order,
+        order=order,
         is_interlude=is_interlude
     )
 
 @app.patch("/albums/{album_id}", response_model=schemas.Album)
-def update_album(album_id: int, updates: schemas.AlbumUpdate, db: Session = Depends(get_db)):
+def update_album(
+    album_id: int,
+    updates: schemas.AlbumUpdate,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
+):
     try:
-        return crud.update_album(db, album_id, updates)
+        return crud.update_album(db, album_id, updates, user_id=user_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
 @app.patch("/songs/{song_id}", response_model=schemas.Song)
-def update_song(song_id: int, updates: schemas.SongUpdate, db: Session = Depends(get_db)):
+def update_song(
+    song_id: int,
+    updates: schemas.SongUpdate,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
+):
     try:
-        return crud.update_song(db, song_id, updates)
+        return crud.update_song(db, song_id, updates, user_id=user_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+
+@app.get("/user-settings", response_model=schemas.UserSettings)
+def get_settings(
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
+):
+
+    settings = crud.get_user_settings(db, user_id)
+
+    if not settings:
+        # create defaults automatically
+        settings = crud.create_user_settings(
+            db,
+            user_id,
+            schemas.UserSettingsCreate()
+        )
+
+    return settings
+
+@app.post("/user-settings", response_model=schemas.UserSettings)
+def save_settings(
+    settings: schemas.UserSettingsCreate,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
+):
+
+    return crud.update_user_settings(db, user_id, settings)
