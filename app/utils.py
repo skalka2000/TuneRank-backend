@@ -1,9 +1,9 @@
 import numpy as np
+from fastapi import Request
 
-def get_current_user_id():
-    # Stub for now — replace with real user ID from auth later
-    return 1
-
+def get_current_user_id(request: Request):
+    user_id = request.query_params.get("user_id")
+    return int(user_id) if user_id else 1
 
 def calculate_weighted_average(songs, power: float = 1.0):
     numerator = 0.0
