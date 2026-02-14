@@ -242,5 +242,91 @@ def save_settings(
     db: Session = Depends(get_db),
     user_id: int = Depends(get_current_user_id)
 ):
-
     return crud.update_user_settings(db, user_id, settings)
+
+
+@app.get("/genres", response_model=List[schemas.Genre])
+def get_genres(
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
+):
+    return crud.get_user_genres(db, user_id)
+
+@app.post("/genres", response_model=schemas.Genre)
+def create_genre(
+    genre: schemas.GenreCreate,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
+):
+    return crud.create_genre(db, user_id, genre)
+
+@app.delete("/genres/{genre_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_genre(
+    genre_id: int,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
+):
+    try:
+        crud.delete_genre(db, genre_id, user_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+@app.post("/albums/{album_id}/genres/{genre_id}", response_model=schemas.Album)
+def add_genre_to_album(
+    album_id: int,
+    genre_id: int,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
+):
+    album = db.query(models.Album).filter(
+        models.Album.id == album_id,
+        models.Album.user_id == user_id
+    ).first()
+
+    if not album:
+        raise HTTPException(status_code=404, detail="Album not found")
+
+    genre = db.query(models.Genre).filter(
+        models.Genre.id == genre_id,
+        models.Genre.user_id == user_id
+    ).first()
+
+    if not genre:
+        raise HTTPException(status_code=404, detail="Genre not found")
+
+    if genre not in album.genres:
+        album.genres.append(genre)
+        db.commit()
+        db.refresh(album)
+
+    return album
+
+@app.delete("/albums/{album_id}/genres/{genre_id}", response_model=schemas.Album)
+def remove_genre_from_album(
+    album_id: int,
+    genre_id: int,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
+):
+    album = db.query(models.Album).filter(
+        models.Album.id == album_id,
+        models.Album.user_id == user_id
+    ).first()
+
+    if not album:
+        raise HTTPException(status_code=404, detail="Album not found")
+
+    genre = db.query(models.Genre).filter(
+        models.Genre.id == genre_id,
+        models.Genre.user_id == user_id
+    ).first()
+
+    if not genre:
+        raise HTTPException(status_code=404, detail="Genre not found")
+
+    if genre in album.genres:
+        album.genres.remove(genre)
+        db.commit()
+        db.refresh(album)
+
+    return album

@@ -1,9 +1,15 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from app.database import Base
 from app.utils import calculate_weighted_average, apply_logistic_normalization
 import math
 
+album_genres = Table(
+    "album_genres",
+    Base.metadata,
+    Column("album_id", Integer, ForeignKey("albums.id"), primary_key=True),
+    Column("genre_id", Integer, ForeignKey("genres.id"), primary_key=True),
+)
 
 class Album(Base):
     __tablename__ = "albums"
@@ -17,6 +23,12 @@ class Album(Base):
 
     user = relationship("User", back_populates="albums")
     songs = relationship("Song", back_populates="album", cascade="all, delete-orphan")
+    genres = relationship(
+        "Genre",
+        secondary=album_genres,
+        back_populates="albums"
+    )
+
 
     @property
     def average_rating(self):
@@ -97,3 +109,17 @@ class UserSettings(Base):
     interlude_weight = Column(Float, default=0.5)
 
     user = relationship("User")
+
+class Genre(Base):
+    __tablename__ = "genres"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+
+    albums = relationship(
+        "Album",
+        secondary="album_genres",
+        back_populates="genres"
+    )
+

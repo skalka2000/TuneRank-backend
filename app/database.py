@@ -1,22 +1,27 @@
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker, declarative_base
 from dotenv import load_dotenv
 
-load_dotenv()  # load from .env file if it exists
+load_dotenv()
 
-# Check if DATABASE_URL is set (for PostgreSQL)
 db_url = os.getenv("DATABASE_URL")
 
 if db_url is None or db_url == "":
-    # Default to SQLite for local dev
     db_url = "sqlite:///./music.db"
+
     engine = create_engine(
         db_url,
-        connect_args={"check_same_thread": False}  # Needed for SQLite
+        connect_args={"check_same_thread": False}
     )
+
+    @event.listens_for(engine, "connect")
+    def enable_sqlite_fk(dbapi_connection, connection_record):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON;")
+        cursor.close()
+
 else:
-    # Use PostgreSQL for production
     engine = create_engine(db_url)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

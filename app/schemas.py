@@ -1,6 +1,19 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
 
+class GenreBase(BaseModel):
+    name: str
+
+class GenreCreate(GenreBase):
+    pass
+
+class Genre(GenreBase):
+    id: int
+
+    model_config = {
+        "from_attributes": True
+    }
+
 class SongCreate(BaseModel):
     title: str
     track_number: Optional[int] = Field(default=None, ge=1)
@@ -12,7 +25,8 @@ class AlbumCreate(BaseModel):
     artist: str
     year: Optional[int] = None
     rating: Optional[float] = Field(default=None, ge=0.0, le=10.0)
-    songs: Optional[List[SongCreate]] = []
+    songs: List[SongCreate] = Field(default_factory=list)
+    genre_ids: List[int] = Field(default_factory=list)
 
 class AlbumBase(BaseModel):
     id: int
@@ -49,10 +63,11 @@ class Album(BaseModel):
     artist: str
     year: Optional[int]
     rating: Optional[float]
-    songs: List[Song] = []
+    songs: List[Song] = Field(default_factory=list)
     average_rating: Optional[float] = None
     overall_rating: Optional[float] = None    
     user_id: int
+    genres: List[Genre] = Field(default_factory=list)
 
     model_config = {
         "from_attributes": True
@@ -70,7 +85,6 @@ class SongUpdate(BaseModel):
     track_number: Optional[int] = Field(default=None, ge=1)
     rating: Optional[float] = Field(default=None, ge=0.0, le=11.0)
     is_interlude: Optional[bool] = False
-
 
 class UserSettingsBase(BaseModel):
     average_power: float = 1.0

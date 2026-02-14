@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.orm import joinedload
 from sqlalchemy import func
 import app.models, app.schemas
 from typing import Optional, List
+
 
 def create_album(db: Session, album: app.schemas.AlbumCreate, user_id: int):
 
@@ -14,7 +16,7 @@ def create_album(db: Session, album: app.schemas.AlbumCreate, user_id: int):
     if existing:
         raise ValueError("Album already exists")
 
-    album_data = album.dict(exclude={"songs"})
+    album_data = album.dict(exclude={"songs", "genre_ids"})
 
     db_album = app.models.Album(
         **album_data,
@@ -29,10 +31,20 @@ def create_album(db: Session, album: app.schemas.AlbumCreate, user_id: int):
             )
             db_album.songs.append(db_song)
 
+    if album.genre_ids:
+        genres = db.query(app.models.Genre).filter(
+            app.models.Genre.id.in_(album.genre_ids),
+            app.models.Genre.user_id == user_id
+        ).all()
+
+        db_album.genres.extend(genres)
+
     db.add(db_album)
     db.commit()
     db.refresh(db_album)
+
     return db_album
+
 
 def get_albums(db: Session, user_id: int):
     return db.query(app.models.Album).filter(
@@ -126,7 +138,6 @@ def get_song_by_title_and_album(db: Session, album_id: int, title: str, user_id:
         func.lower(app.models.Song.title) == title.strip().lower()
     ).first()
 
-
 def get_filtered_songs(
     db: Session,
     user_id: int,
@@ -197,9 +208,12 @@ def get_filtered_albums(
     max_rating=None,
     title_contains=None,
     sort_by=None,
+    genre_ids=None,
     order="asc"
 ):
-    query = db.query(app.models.Album).filter(
+    query = db.query(app.models.Album).options(
+        joinedload(app.models.Album.genres)
+    ).filter(
         app.models.Album.user_id == user_id
     )
 
@@ -218,6 +232,12 @@ def get_filtered_albums(
 
     if title_contains:
         query = query.filter(app.models.Album.title.ilike(f"%{title_contains}%"))
+    
+    if genre_ids:
+        query = query.join(app.models.Album.genres).filter(
+            app.models.Genre.id.in_(genre_ids),
+            app.models.Genre.user_id == user_id
+        ).distinct()
 
     # Sorting
     if sort_by:
@@ -305,3 +325,31 @@ def update_user_settings(db: Session, user_id: int, settings: app.schemas.UserSe
     db.refresh(db_settings)
 
     return db_settings
+
+def create_genre(db: Session, user_id: int, genre: app.schemas.GenreCreate):
+    db_genre = app.models.Genre(
+        name=genre.name,
+        user_id=user_id
+    )
+    db.add(db_genre)
+    db.commit()
+    db.refresh(db_genre)
+    return db_genre
+
+def get_user_genres(db: Session, user_id: int):
+    return db.query(app.models.Genre).filter(
+        app.models.Genre.user_id == user_id
+    ).all()
+
+def delete_genre(db: Session, genre_id: int, user_id: int):
+    genre = db.query(app.models.Genre).filter(
+        app.models.Genre.id == genre_id,
+        app.models.Genre.user_id == user_id
+    ).first()
+
+    if not genre:
+        raise ValueError("Genre not found")
+
+    db.delete(genre)
+    db.commit()
+
