@@ -81,6 +81,7 @@ def get_albums_filtered(
         album._scaling_factor = settings.scaling_factor
         album._steep_factor = settings.steep_factor
         album._average_rating_weight = settings.average_rating_weight
+        album._interlude_weight = settings.interlude_weight
 
     return albums
 
@@ -107,6 +108,8 @@ def read_album(
     album._scaling_factor = settings.scaling_factor
     album._steep_factor = settings.steep_factor
     album._average_rating_weight = settings.average_rating_weight 
+    album._interlude_weight = settings.interlude_weight
+
     return album
 
 @app.post("/albums/{album_id}/songs", response_model=schemas.Song)

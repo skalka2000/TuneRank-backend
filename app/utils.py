@@ -1,11 +1,17 @@
 import numpy as np
 from fastapi import Request
 
+RATING_FLOOR = 6.0
+
 def get_current_user_id(request: Request):
     user_id = request.query_params.get("user_id")
     return int(user_id) if user_id else 1
 
-def calculate_weighted_average(songs, power: float = 1.0):
+def calculate_weighted_average(
+    songs,
+    power: float = 1.0,
+    interlude_weight: float = 0.5
+):
     numerator = 0.0
     denominator = 0.0
 
@@ -13,13 +19,14 @@ def calculate_weighted_average(songs, power: float = 1.0):
         if song.rating is None:
             continue
 
-        base_weight = 0.5 if song.is_interlude else 1.0
-        weight = base_weight * (max(song.rating, 6) ** power)
+        base_weight = interlude_weight if song.is_interlude else 1.0
+        weight = base_weight * (max(song.rating, RATING_FLOOR) ** power)
 
         numerator += song.rating * weight
         denominator += weight
 
     return round(numerator / denominator, 2) if denominator else None
+
 
 def apply_logistic_normalization(rating, greatness_threshold: float = 8.0, scaling_factor: float = 0.3, steep_factor: float = 3):
 

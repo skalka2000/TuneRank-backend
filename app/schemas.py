@@ -78,7 +78,7 @@ class UserSettingsBase(BaseModel):
     scaling_factor: float = 0.3
     steep_factor: float = 3.0
     average_rating_weight: float = 0.5
-
+    interlude_weight: float = 0.5
 
 class UserSettingsCreate(UserSettingsBase):
     pass

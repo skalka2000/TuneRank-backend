@@ -27,8 +27,9 @@ class Album(Base):
         greatness_threshold = getattr(self, "_greatness_threshold", 8.0)
         scaling_factor = getattr(self, "_scaling_factor", 0.3)
         steep_factor = getattr(self, "_steep_factor", 3)
+        interlude_weight = getattr(self, "_interlude_weight", 0.5)
 
-        weighted_average = calculate_weighted_average(self.songs, power)
+        weighted_average = calculate_weighted_average(self.songs, power, interlude_weight)
         if weighted_average is None:
             return None
 
@@ -93,5 +94,6 @@ class UserSettings(Base):
     scaling_factor = Column(Float, default=0.3)
     steep_factor = Column(Float, default=3.0)
     average_rating_weight = Column(Float, default=0.5)
+    interlude_weight = Column(Float, default=0.5)
 
     user = relationship("User")
