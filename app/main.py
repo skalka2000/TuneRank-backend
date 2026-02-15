@@ -52,6 +52,7 @@ def get_albums_filtered(
     title_contains: Optional[str] = None,
     sort_by: Optional[str] = Query(default=None),
     order: str = Query(default="asc"),
+    genre_ids: Optional[List[int]] = Query(default=None),
     db: Session = Depends(get_db),
     user_id: int = Depends(get_current_user_id)
 ):
@@ -72,7 +73,8 @@ def get_albums_filtered(
         max_rating=max_rating,
         title_contains=title_contains,
         sort_by=sort_by,
-        order=order
+        order=order,
+        genre_ids=genre_ids
     )
 
     for album in albums:
