@@ -300,6 +300,9 @@ def add_genre_to_album(
         album.genres.append(genre)
         db.commit()
         db.refresh(album)
+    
+    settings = crud.get_user_settings(db, user_id) or crud.create_user_settings(db, user_id, schemas.UserSettingsCreate())
+    crud.apply_settings_to_album(album, settings)
 
     return album
 
@@ -330,5 +333,8 @@ def remove_genre_from_album(
         album.genres.remove(genre)
         db.commit()
         db.refresh(album)
+
+    settings = crud.get_user_settings(db, user_id) or crud.create_user_settings(db, user_id, schemas.UserSettingsCreate())
+    crud.apply_settings_to_album(album, settings)
 
     return album

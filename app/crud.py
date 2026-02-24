@@ -353,3 +353,12 @@ def delete_genre(db: Session, genre_id: int, user_id: int):
     db.delete(genre)
     db.commit()
 
+def apply_settings_to_album(album, settings):
+    album._average_power = settings.average_power
+    album._greatness_threshold = settings.greatness_threshold
+    album._scaling_factor = settings.scaling_factor
+    album._steep_factor = settings.steep_factor
+    album._average_rating_weight = settings.average_rating_weight
+    album._interlude_weight = settings.interlude_weight
+    return album
+
