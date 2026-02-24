@@ -84,7 +84,7 @@ def get_albums_filtered(
         album._steep_factor = settings.steep_factor
         album._average_rating_weight = settings.average_rating_weight
         album._interlude_weight = settings.interlude_weight
-
+        print(album.average_rating)
     return albums
 
 @app.get("/albums/{album_id}", response_model=schemas.Album)
@@ -301,7 +301,15 @@ def add_genre_to_album(
         db.commit()
         db.refresh(album)
     
-    settings = crud.get_user_settings(db, user_id) or crud.create_user_settings(db, user_id, schemas.UserSettingsCreate())
+    settings = crud.get_user_settings(db, user_id)
+
+    if not settings:
+        settings = crud.create_user_settings(
+            db,
+            user_id,
+            schemas.UserSettingsCreate()
+        )
+
     crud.apply_settings_to_album(album, settings)
 
     return album
@@ -334,7 +342,15 @@ def remove_genre_from_album(
         db.commit()
         db.refresh(album)
 
-    settings = crud.get_user_settings(db, user_id) or crud.create_user_settings(db, user_id, schemas.UserSettingsCreate())
+    settings = crud.get_user_settings(db, user_id)
+
+    if not settings:
+        settings = crud.create_user_settings(
+            db,
+            user_id,
+            schemas.UserSettingsCreate()
+        )  
+
     crud.apply_settings_to_album(album, settings)
 
     return album
