@@ -84,7 +84,6 @@ def get_albums_filtered(
         album._steep_factor = settings.steep_factor
         album._average_rating_weight = settings.average_rating_weight
         album._interlude_weight = settings.interlude_weight
-        print(album.average_rating)
     return albums
 
 @app.get("/albums/{album_id}", response_model=schemas.Album)

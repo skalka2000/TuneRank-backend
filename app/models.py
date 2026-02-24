@@ -58,10 +58,13 @@ class Album(Base):
     @property
     def overall_rating(self):
         average_rating_weight = getattr(self, "_average_rating_weight", 0.5)
-        if self.rating is not None and self.average_rating is not None:
-            return math.floor(
-                (self.rating * (1 - average_rating_weight) + self.average_rating * average_rating_weight) * 100
-            ) / 100
+        if self.rating is not None:
+            if self.average_rating is not None:
+                return math.floor(
+                    (self.rating * (1 - average_rating_weight) + self.average_rating * average_rating_weight) * 100
+                ) / 100
+            else:
+                return self.rating
         return None
 
 
