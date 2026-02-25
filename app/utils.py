@@ -10,7 +10,8 @@ def get_current_user_id(request: Request):
 def calculate_weighted_average(
     songs,
     power: float = 1.0,
-    interlude_weight: float = 0.5
+    interlude_weight: float = 0.5,
+    epic_weight: float = 2.0,
 ):
     numerator = 0.0
     denominator = 0.0
@@ -19,7 +20,15 @@ def calculate_weighted_average(
         if song.rating is None:
             continue
 
-        base_weight = interlude_weight if song.is_interlude else 1.0
+        st = getattr(song, "song_type", "song")
+
+        if st == "interlude":
+            base_weight = interlude_weight
+        elif st == "epic":
+            base_weight = epic_weight
+        else:
+            base_weight = 1.0
+
         weight = base_weight * (max(song.rating, RATING_FLOOR) ** power)
 
         numerator += song.rating * weight

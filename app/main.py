@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app import models, schemas, crud
 from app.database import SessionLocal, engine
-from typing import List, Optional
+from typing import List, Optional, Literal
 from fastapi.middleware.cors import CORSMiddleware
 from app.utils import get_current_user_id
 
@@ -84,6 +84,7 @@ def get_albums_filtered(
         album._steep_factor = settings.steep_factor
         album._average_rating_weight = settings.average_rating_weight
         album._interlude_weight = settings.interlude_weight
+        album._epic_weight = settings.epic_weight
     return albums
 
 @app.get("/albums/{album_id}", response_model=schemas.Album)
@@ -110,6 +111,7 @@ def read_album(
     album._steep_factor = settings.steep_factor
     album._average_rating_weight = settings.average_rating_weight 
     album._interlude_weight = settings.interlude_weight
+    album._epic_weight = settings.epic_weight
 
     return album
 
@@ -179,7 +181,7 @@ def get_songs_filtered(
     sort_by: Optional[str] = Query(default=None),
     order: str = Query(default="asc"),
     db: Session = Depends(get_db),
-    is_interlude: Optional[bool] = Query(default=None),
+    song_type: Optional[Literal["interlude", "song", "epic"]] = Query(default=None),
     user_id: int = Depends(get_current_user_id)
 ):
     return crud.get_filtered_songs(
@@ -192,7 +194,7 @@ def get_songs_filtered(
         title_contains=title_contains,
         sort_by=sort_by,
         order=order,
-        is_interlude=is_interlude
+        song_type=song_type,
     )
 
 @app.patch("/albums/{album_id}", response_model=schemas.Album)

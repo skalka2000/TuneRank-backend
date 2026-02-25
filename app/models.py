@@ -40,8 +40,10 @@ class Album(Base):
         scaling_factor = getattr(self, "_scaling_factor", 0.3)
         steep_factor = getattr(self, "_steep_factor", 3)
         interlude_weight = getattr(self, "_interlude_weight", 0.5)
+        epic_weight = getattr(self, "_epic_weight", 2.0)
 
-        weighted_average = calculate_weighted_average(self.songs, power, interlude_weight)
+        weighted_average = calculate_weighted_average(self.songs, power, interlude_weight, epic_weight)
+
         if weighted_average is None:
             return None
 
@@ -77,7 +79,7 @@ class Song(Base):
     title = Column(String, nullable=False)
     track_number = Column(Integer)
     rating = Column(Float)
-    is_interlude = Column(Boolean, default=False)
+    song_type = Column(String, nullable=False, default="song")
 
     album = relationship("Album", back_populates="songs")
     user = relationship("User", back_populates="songs")
@@ -110,6 +112,7 @@ class UserSettings(Base):
     steep_factor = Column(Float, default=3.0)
     average_rating_weight = Column(Float, default=0.5)
     interlude_weight = Column(Float, default=0.5)
+    epic_weight = Column(Float, default=2.0)
 
     user = relationship("User")
 

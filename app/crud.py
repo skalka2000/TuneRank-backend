@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.orm import joinedload
 from sqlalchemy import func
 import app.models, app.schemas
-from typing import Optional, List
+from typing import Optional, List, Literal
 
 
 def create_album(db: Session, album: app.schemas.AlbumCreate, user_id: int):
@@ -148,7 +148,7 @@ def get_filtered_songs(
     title_contains: Optional[str] = None,
     sort_by=None,
     order="asc",
-    is_interlude: Optional[bool] = None,
+    song_type: Optional[Literal["interlude", "song", "epic"]] = None,
 ):
 
     query = db.query(app.models.Song).join(app.models.Album).filter(
@@ -175,8 +175,8 @@ def get_filtered_songs(
     if title_contains:
         query = query.filter(app.models.Song.title.ilike(f"%{title_contains}%"))
 
-    if is_interlude is not None:
-        query = query.filter(app.models.Song.is_interlude == is_interlude)
+    if song_type is not None:
+        query = query.filter(app.models.Song.song_type == song_type)
 
     # Sorting logic
     if sort_by:
@@ -360,5 +360,6 @@ def apply_settings_to_album(album, settings):
     album._steep_factor = settings.steep_factor
     album._average_rating_weight = settings.average_rating_weight
     album._interlude_weight = settings.interlude_weight
+    album._epic_weight = settings.epic_weight
     return album
 

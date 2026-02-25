@@ -1,5 +1,8 @@
 from pydantic import BaseModel, Field
-from typing import Optional, List
+from typing import Optional, List, Literal
+
+SongType = Literal["interlude", "song", "epic"]
+
 
 class GenreBase(BaseModel):
     name: str
@@ -18,7 +21,7 @@ class SongCreate(BaseModel):
     title: str
     track_number: Optional[int] = Field(default=None, ge=1)
     rating: Optional[float] = Field(default=None, ge=0.0, le=11.0)
-    is_interlude: Optional[bool] = False
+    song_type: SongType = "song"
 
 class AlbumCreate(BaseModel):
     title: str
@@ -49,7 +52,7 @@ class Song(BaseModel):
     rating: Optional[float]
     album_id: int
     album: Optional[AlbumBase]
-    is_interlude: Optional[bool] = False
+    song_type: SongType = "song"
     user_id: int
 
     model_config = {
@@ -84,7 +87,7 @@ class SongUpdate(BaseModel):
     title: Optional[str] = None
     track_number: Optional[int] = Field(default=None, ge=1)
     rating: Optional[float] = Field(default=None, ge=0.0, le=11.0)
-    is_interlude: Optional[bool] = False
+    song_type: SongType = "song"
 
 class UserSettingsBase(BaseModel):
     average_power: float = 1.0
@@ -93,6 +96,7 @@ class UserSettingsBase(BaseModel):
     steep_factor: float = 3.0
     average_rating_weight: float = 0.5
     interlude_weight: float = 0.5
+    epic_weight: float = 2.0
 
 class UserSettingsCreate(UserSettingsBase):
     pass
