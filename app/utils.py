@@ -2,6 +2,7 @@ import numpy as np
 from fastapi import Request
 
 RATING_FLOOR = 6.0
+RATING_CEILING = 10.0
 
 def get_current_user_id(request: Request):
     user_id = request.query_params.get("user_id")
@@ -28,10 +29,13 @@ def calculate_weighted_average(
             base_weight = epic_weight
         else:
             base_weight = 1.0
+        
+        r = song.rating
+        r_for_weight = min(max(r, RATING_FLOOR), RATING_CEILING)
 
-        weight = base_weight * (max(song.rating, RATING_FLOOR) ** power)
+        weight = base_weight * (r_for_weight ** power)
 
-        numerator += song.rating * weight
+        numerator += r * weight
         denominator += weight
 
     return round(numerator / denominator, 2) if denominator else None
